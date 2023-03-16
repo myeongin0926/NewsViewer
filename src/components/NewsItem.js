@@ -5,25 +5,23 @@ import imageReady from "../imageReady.jpeg";
 
 const NewsItemBlock = styled.div`
   position: relative;
-  width: 450px;
-  height: 400px;
+  width: 350px;
+  height: 450px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   display: flex;
   overflow: hidden;
-  gap: 20px;
   padding: 10px;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
   border-radius: 20px;
   text-align: center;
-
   .thumnail {
     overflow: hidden;
     border-radius: 12px 12px 0 0;
     height: 200px;
     img {
-      width: 430px;
+      width: 330px;
       height: 200px;
       object-fit: cover;
       transition: 0.2s;
