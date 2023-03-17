@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import NewsItem from "./NewsItem";
 import axios from "axios";
+import { BiArrowToTop } from "react-icons/bi";
 
 const NewsTemplateBlock = styled.div`
   width: 70%;
@@ -20,16 +21,40 @@ const LoadingModal = styled.div`
   background-color: rgba(0, 0, 0, 0.8);
   z-index: 11;
 `;
+const Nullarticle = styled.div`
+  position: relative;
+  height: 100vh;
+  backdrop-filter: blur(3px);
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  z-index: 11;
+`;
+const ToTop = styled.div`
+  position: absolute;
+  background-color: black;
+  right: -30px;
+  border-radius: 0 50% 50% 0;
+  width: 50px;
+  height: 50px;
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 23px;
+`;
 
 const PageNavigation = styled.div`
-  width: 50px;
+  padding: 0 30px;
   height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
-  transition: all 0.3s;
-  box-sizing: border-box;
   border-radius: 30px;
   position: fixed;
   bottom: 30px;
@@ -37,22 +62,35 @@ const PageNavigation = styled.div`
   color: white;
   font-size: 18px;
   font-weight: bold;
-
-  overflow: hidden;
+  transition: all 0.2s;
+  cursor: pointer;
 
   &:hover {
-    width: 200px;
-    & > .page {
-      display: block;
+    transition-delay: 0s;
+    background-color: black;
+    border-radius: 30px 0 0 30px;
+    ${ToTop} {
+      transition: 0.2s;
+
+      opacity: 1;
+      visibility: visible;
     }
   }
 `;
 const PageNumber = styled.span`
-  display: none;
+  margin-top: -5px;
+  display: inline-block;
+  height: 30px;
   line-height: 2;
   box-sizing: border-box;
-  opacity: 0.6;
+  opacity: 0.4;
   transition: 0.1s;
+  ${(props) =>
+    props.currentPage &&
+    css`
+      opacity: 1;
+      border-bottom: 1px solid white;
+    `}
   &:hover {
     opacity: 1;
   }
@@ -61,7 +99,7 @@ const PageNumber = styled.span`
 const NewsListTemplate = ({ category }) => {
   const [articles, setArticle] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [totalListNumber, setTotalListNumber] = useState(1);
+  const [page, setPage] = useState(1);
   const [pageNumberList, setPageNumberList] = useState([]);
 
   useEffect(() => {
@@ -70,7 +108,7 @@ const NewsListTemplate = ({ category }) => {
       try {
         const query = category === "all" ? "" : `&category=${category}`;
         const response = await axios.get(
-          `https://newsapi.org/v2/top-headlines?country=us${query}&apiKey=782fce2be06a47c182e24698c8672cbb&pageSize=20&page=${totalListNumber}`
+          `https://newsapi.org/v2/top-headlines?country=us${query}&apiKey=193130353ade4db18399285d60dd6cd5&pageSize=20&page=${page}`
         );
 
         setArticle(response.data.articles);
@@ -86,17 +124,20 @@ const NewsListTemplate = ({ category }) => {
       setLoading(false);
     };
     fetchdata();
-  }, [category, totalListNumber]);
+  }, [category, page]);
 
   const handlePageChange = (pageNumber) => {
-    setTotalListNumber(pageNumber);
+    setPage(pageNumber);
+  };
+  const handleToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   if (loading) {
     return <LoadingModal></LoadingModal>;
   }
   if (!articles) {
-    return <div>article 값이 없음</div>;
+    return <Nullarticle>Article이 비어있음</Nullarticle>;
   }
 
   return (
@@ -112,12 +153,15 @@ const NewsListTemplate = ({ category }) => {
                 className="page"
                 key={pageNumber}
                 onClick={() => handlePageChange(pageNumber)}
-                style={{ cursor: "pointer" }}
+                currentPage={page === pageNumber}
               >
                 {pageNumber}
               </PageNumber>
             );
           })}
+          <ToTop className="totop" onClick={handleToTop}>
+            <BiArrowToTop />
+          </ToTop>
         </PageNavigation>
       </NewsTemplateBlock>
     </>

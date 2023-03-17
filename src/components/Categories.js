@@ -1,6 +1,6 @@
 import React from "react";
-import { css } from "styled-components";
 import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 
 const categories = [
   { name: "all", text: "전체보기" },
@@ -11,18 +11,18 @@ const categories = [
   { name: "entertainment", text: "엔터테이먼트" },
 ];
 
-const Category = styled.div`
+const Category = styled(NavLink)`
   font-size: 16px;
   font-weight: 600;
   padding-bottom: 3px;
   cursor: pointer;
-  ${(props) =>
-    props.active &&
-    css`
-      font-weight: bold;
-      border-bottom: 2px solid;
-      color: red;
-    `}
+  text-decoration: none;
+  color: black;
+  &.active {
+    font-weight: bold;
+    border-bottom: 2px solid;
+    color: rgb(157, 157, 122);
+  }
 `;
 const CategoriesBlock = styled.div`
   display: flex;
@@ -35,7 +35,8 @@ const Categories = ({ onSelect, category }) => {
       {categories.map((c) => (
         <Category
           key={c.name}
-          active={category === c.name}
+          className={({ isActive }) => (isActive ? "active" : undefined)}
+          to={c.name === "all" ? "/" : `/${c.name}`}
           onClick={() => {
             onSelect(c.name);
           }}

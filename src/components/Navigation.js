@@ -9,7 +9,7 @@ const NavArea = styled.div`
   height: 100px;
   margin: 0 auto;
   position: fixed;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
   background-color: rgba(255, 255, 255, 0.5);
   top: 30px;
   z-index: 10;

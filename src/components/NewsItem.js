@@ -6,7 +6,7 @@ import imageReady from "../imageReady.jpeg";
 const NewsItemBlock = styled.div`
   position: relative;
   width: 350px;
-  height: 450px;
+  height: 470px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   display: flex;
   overflow: hidden;
